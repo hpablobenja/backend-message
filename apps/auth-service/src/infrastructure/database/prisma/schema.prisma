@@ -1,0 +1,18 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model UserModel {
+  id           String   @id @default(uuid())
+  name         String
+  phoneNumber  String   @unique @map("phone_number") // Snake case en DB, camelCase en app
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users") // Nombre de la tabla en plural y minúsculas
+}

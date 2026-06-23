@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # Base de datos relacional para Usuarios/Contactos (Auth)
+  postgres:
+    image: postgres:15-alpine
+    container_name: whatsapp_postgres
+    environment:
+      POSTGRES_USER: node_user
+      POSTGRES_PASSWORD: node_password
+      POSTGRES_DB: whatsapp_auth
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U node_user -d whatsapp_auth"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Base de datos NoSQL para Historial de Mensajes (Chat)
+  mongo:
+    image: mongo:6.0
+    container_name: whatsapp_mongo
+    ports:
+      - "2717:27017"
+    volumes:
+      - mongodata:/data/db
+
+  # Broker de Eventos y Caché de Sockets distribuidos
+  redis:
+    image: redis:7-alpine
+    container_name: whatsapp_redis
+    ports:
+      - "6379:6379"
+
+  # Microservicio 1: Autenticación e Identidad
+  auth-service:
+    build:
+      context: ./apps/auth-service
+      dockerfile: Dockerfile
+    container_name: whatsapp_auth_service
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./apps/auth-service/.env
+    environment:
+      - DATABASE_URL=postgresql://node_user:node_password@postgres:5432/whatsapp_auth?schema=public
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy && node dist/main.js"
+
+  # Microservicio 2: Mensajería en Tiempo Real (WebSockets)
+  chat-service:
+    build:
+      context: ./apps/chat-service
+      dockerfile: Dockerfile
+    container_name: whatsapp_chat_service
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGO_URI=mongodb://mongo:27017/whatsapp_chat
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - mongo
+      - redis
+  
+  # Servidor de recolección de métricas
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: whatsapp_prometheus
+    volumes:
+      - ./infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  # Panel visualizador
+  grafana:
+    image: grafana/grafana:latest
+    container_name: whatsapp_grafana
+    ports:
+      - "3005:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+volumes:
+  pgdata:
+  mongodata:
+

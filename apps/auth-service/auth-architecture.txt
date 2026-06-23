@@ -1,0 +1,49 @@
+auth-service/
+├── src/
+│   ├── domain/                         # Capa de Dominio (Reglas de negocio puras, sin dependencias externas)
+│   │   ├── entities/
+│   │   │   └── user.entity.ts          # Entidad de Usuario con sus validaciones internas
+│   │   ├── exceptions/
+│   │   │   └── domain.exception.ts     # Errores específicos de negocio (ej. UserAlreadyExists)
+│   │   ├── repositories/
+│   │   │   └── user.repository.ts      # Puerto/Interfaz: Contrato que la infraestructura debe cumplir
+│   │   └── services/
+│   │       └── password.interface.ts   # Puerto/Interfaz: Contrato para el hashing de contraseñas
+│   │
+│   ├── application/                    # Capa de Aplicación (Casos de uso que orquestan las acciones)
+│   │   ├── dtos/
+│   │   │   ├── register-user.dto.ts    # DTO de entrada para el caso de uso
+│   │   │   └── user-response.dto.ts    # DTO de salida unificado
+│   │   └── use-cases/
+│   │       ├── register-user.use-case.ts # Lógica del caso de uso de registro
+│   │       └── login-user.use-case.ts    # Lógica del caso de uso de login
+│   │
+│   ├── infrastructure/                 # Capa de Infraestructura (Detalles técnicos, frameworks y adaptadores)
+│   │   ├── config/
+│   │   │   └── env.validator.ts        # Validación estricta de variables de entorno con Zod/Joi
+│   │   ├── database/
+│   │   │   ├── prisma/                 # Si usas Prisma (o subcarpeta para TypeORM)
+│   │   │   │   └── schema.prisma       # Esquema de la base de datos PostgreSQL
+│   │   │   └── repositories/
+│   │   │       └── postgres-user.repository.ts # Adaptador real que habla con PostgreSQL via ORM
+│   │   ├── http/
+│   │   │   ├── controllers/
+│   │   │   │   └── auth.controller.ts  # Controlador HTTP (NestJS, Fastify o Express)
+│   │   │   ├── dtos/
+│   │   │   │   └── http-register.dto.ts # DTO de validación HTTP con class-validator
+│   │   │   └── middlewares/
+│   │   │       └── error-handler.middleware.ts # Filtro global de excepciones (RFC 7807)
+│   │   └── security/
+│   │       ├── argon2-password.service.ts # Adaptador para encriptar contraseñas (Argon2/Bcrypt)
+│   │       └── jwt-token.service.ts    # Adaptador para generación y verificación de JWT
+│   │
+│   ├── main.ts                         # Punto de entrada de la aplicación (Bootstrap/Inyección de dependencias)
+│   └── tsconfig.json                   # Configuración del compilador de TypeScript
+│
+├── tests/                              # Suite de Pruebas Automatizadas
+│   ├── unit/                           # Pruebas unitarias para Dominio y Casos de Uso
+│   └── integration/                    # Pruebas de integración con la base de datos de Docker
+│
+├── .env.example                        # Plantilla de variables de entorno
+├── Dockerfile                          # Dockerfile multi-stage optimizado para producción
+└── package.json
