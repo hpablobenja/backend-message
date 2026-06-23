@@ -20,7 +20,7 @@ El ecosistema se divide en componentes especializados para separar el tráfico s
 
 El microservicio de autenticación implementa los principios de aislamiento del Dominio frente a la Infraestructura externa:
 
-
+```bash
 apps/auth-service/
 ├── src/
 │   ├── domain/                      # Reglas de negocio puras (Sin frameworks/ORMs)
