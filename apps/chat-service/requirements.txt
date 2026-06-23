@@ -1,0 +1,11 @@
+File .env with the following content:
+
+PORT=3001
+NODE_ENV=development
+
+# URL de conexión para Mongoose (Apunta al contenedor de MongoDB)
+MONGO_URI="mongodb://mongo:27017/whatsapp_chat"
+
+# Conexión al contenedor de Redis
+REDIS_HOST="redis"
+REDIS_PORT=6379

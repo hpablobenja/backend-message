@@ -1,0 +1,15 @@
+File .env with the following content:
+
+# URL de conexión para Prisma (Desarrollo local - apunta a localhost)
+DATABASE_URL="postgresql://node_user:node_password@localhost:5432/whatsapp_auth?schema=public"
+
+# Secreto para firmar los tokens JWT
+JWT_SECRET="tu_secreto_super_seguro_para_los_tokens_jwt_2026"
+
+File .env.local with the following content:
+
+# URL de conexión para Prisma (Desarrollo local - fuera de Docker)
+DATABASE_URL="postgresql://node_user:node_password@localhost:5432/whatsapp_auth?schema=public"
+
+# Secreto para firmar los tokens JWT
+JWT_SECRET="tu_secreto_super_seguro_para_los_tokens_jwt_2026"
