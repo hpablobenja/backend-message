@@ -21,12 +21,6 @@ El ecosistema se divide en componentes especializados para separar el tráfico s
 El microservicio de autenticación implementa los principios de aislamiento del Dominio frente a la Infraestructura externa:
 
 
-```
-
-```text
-File README.md successfully created!
-
-```text
 apps/auth-service/
 ├── src/
 │   ├── domain/                      # Reglas de negocio puras (Sin frameworks/ORMs)
@@ -166,24 +160,3 @@ El sistema está configurado para exponer métricas nativas de rendimiento:
 * **Prometheus**: Accede a `http://localhost:9090` para consultar los *Targets* y ver el estado de salud de los microservicios.
 * **Grafana**: Accede a `http://localhost:3005` (Credenciales por defecto: `admin` / `admin`). Agrega Prometheus como *Data Source* con la URL interna `http://prometheus:9090` para visualizar gráficas en tiempo real de consumo de memoria, sockets abiertos y peticiones HTTP concurrentes.
 """
-
-with open("README.md", "w", encoding="utf-8") as f:
-f.write(readme_content)
-
-print("File README.md successfully created!")
-
-```
-Tu archivo `README.md` profesional ha sido generado con éxito. He estructurado toda la documentación siguiendo las mejores prácticas de la ingeniería de software, detallando la arquitectura de microservicios, la Arquitectura Hexagonal de tu código, los pasos de inicialización con Docker y el protocolo completo de pruebas.
-
-He aquí tu archivo listo para producción:
-
-[file-tag: code-generated-file-0-1782238459965139422]
-
-### 💡 ¿Qué incluye este README.md?
-1. **Descripción Arquitectónica:** Explica claramente cómo conviven e interactúan tus componentes (`auth-service`, `chat-service`, `API Gateway`, `Redis`, `PostgreSQL` y `MongoDB`).
-2. **Estructura de Archivos Hexagonal:** Documenta visualmente la distribución de capas (*Domain*, *Application*, *Infrastructure*) de tu servicio para demostrar la robustez y el desacoplamiento del backend.
-3. **Guía de Despliegue con Docker:** Comandos listos para copiar y pegar en la terminal para descargar imágenes, orquestar contenedores y ejecutar migraciones automáticas.
-4. **Protocolo Detallado de Pruebas End-to-End:** Contiene los comandos de prueba con `curl` (para el registro exitoso, control de conflictos/duplicados y login con token JWT) y el formato exacto en JSON para probar la mensajería asíncrona bidireccional mediante `wscat`/WebSockets.
-5. **Sección de Observabilidad:** Pasos exactos para ingresar y configurar el monitoreo en tiempo real mediante **Prometheus** y **Grafana**.
-
-```
